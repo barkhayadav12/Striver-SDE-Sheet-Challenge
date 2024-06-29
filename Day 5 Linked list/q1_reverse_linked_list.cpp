@@ -1,24 +1,25 @@
 /*
-Hare & tortoise algorithm
-->slow and fast pointer
-slow pointer ek node move karegi at a time
-fast pointer 2 node move karegi at a time
+2 pointers technique use hogi
 
-detect cycle,delete nth node, middle of a node mein use hoti hai
+Imp thing: current node ka next, previous node ko point karegi
+instead of next node
+
 */
 
 class Solution
 {
 public:
-    ListNode *middleNode(ListNode *head)
+    ListNode *reverseList(ListNode *head)
     {
-        ListNode *slow = head;
-        ListNode *fast = head;
-        while (fast && fast->next)
+        ListNode *prev = NULL;
+        ListNode *temp = head;
+        while (temp != NULL)
         {
-            slow = slow->next;
-            fast = fast->next->next;
+            ListNode *front = temp->next;
+            temp->next = prev;
+            prev = temp;
+            temp = front;
         }
-        return slow;
+        return prev;
     }
 };
