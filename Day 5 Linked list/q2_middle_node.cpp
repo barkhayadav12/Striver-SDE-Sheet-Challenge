@@ -1,11 +1,20 @@
 /*
-Hare & tortoise algorithm
+Tortoise and Hare algorithm
 ->slow and fast pointer
-slow pointer ek node move karegi at a time
-fast pointer 2 node move karegi at a time
+slow pointer 1 step move karegi at a time
+fast pointer 2 step move karegi at a time
 
 detect cycle,delete nth node, middle of a node mein use hoti hai
+
+Intution:
+
+Why this works?
+
+Suppose a person 'P1' moves with speed 'x' , another person 'P2' moves with speed '2*x',
+toh obvious hai ki jab the person that moves 2x reaches the end, P1 middle hi pahuncha hoga tab.
+
 */
+
 
 class Solution
 {
