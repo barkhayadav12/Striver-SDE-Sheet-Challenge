@@ -1,0 +1,11 @@
+//Identification:
+
+->K
+->smallest/largest
+
+minHeap- kth + largest
+maxHeap- kth + smallest
+
+minHeap-- priority_queue<int,vector<int>,greater<int>>minh;
+
+maxHeap -- priority_queue<int>maxh
