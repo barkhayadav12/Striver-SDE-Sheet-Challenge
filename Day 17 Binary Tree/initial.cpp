@@ -42,6 +42,11 @@ public:
     vector<int>topView(node*root);
     vector<int>bottomView(node*root);
     void leftView(node*root,int level,vector<int>&leftview);
+    vector<int>boundaryTraversal(node*root);
+    vector<vector<int>>zigZagTraversal(node*root);
+    int height(node*root);
+    int isBalanced(node*root);
+    int diameter(node*root,int &maxi);
 };
 // creating a new node
 node *tree::newNode(int data)
@@ -304,6 +309,174 @@ void tree::leftView(node*root,int level,vector<int>&leftview)
     leftView(root->rchild,level+1,leftview);
 }
 
+//bounday traversal
+
+void leftNodes(node*root,vector<int>&v)
+{
+    node*temp=root->lchild;
+    while(temp)
+    {
+        if(temp->lchild!=NULL && temp->rchild!=NULL)
+        {
+            v.push_back(temp->val);
+        }
+        if(temp->lchild)
+        {
+            temp=temp->lchild;
+        }
+        else{
+            temp=temp->rchild;
+        }
+    }
+}
+//add right nodes
+void rightNodes(node*root,vector<int>&v)
+{
+    node*temp=root->rchild;
+    vector<int>vec;
+    while(temp)
+    {
+        if(temp->lchild!=NULL && temp->rchild!=NULL)
+        {
+            vec.push_back(temp->val);
+        }
+        if(temp->rchild)
+        {
+            temp=temp->rchild;
+        }
+        else{
+            temp=temp->lchild;
+        }
+    }
+    for(int i=vec.size()-1;i>=0;i--)
+    {
+        v.push_back(vec[i]);
+    }
+}
+//add leaf nodes
+void addLeaf(node*root,vector<int>&v)
+{
+    if(root->lchild==NULL && root->rchild==NULL)
+    {
+        v.push_back(root->val);
+        return;
+    }
+    if(root->lchild)
+    {
+        addLeaf(root->lchild,v);
+    }
+    if(root->rchild)
+    {
+        addLeaf(root->rchild,v);
+    }
+}
+
+//boundary traversal
+
+vector<int>tree::boundaryTraversal(node*root)
+{
+    //left nodes
+    vector<int>v;
+    v.push_back(root->val);
+    leftNodes(root,v);
+    addLeaf(root,v);
+    rightNodes(root,v);
+    return v;
+}
+
+//Zig Zag Traversal
+
+vector<vector<int>> tree::zigZagTraversal(node*root)
+{
+    vector<vector<int>>v;
+    queue<node*>q;
+    q.push(root);
+    bool leftToRight=true;
+    while(!q.empty())
+    {
+        int n=q.size();
+        vector<int>temp;
+        while(n--)
+        {
+            node*it=q.front();
+            q.pop();
+            temp.push_back(it->val);
+            if(it->lchild)
+            {
+                q.push(it->lchild);
+            }
+            if(it->rchild)
+            {
+                q.push(it->rchild);
+            }
+        }
+        if(leftToRight==false)
+        {
+            vector<int>vec;
+            for(int i=temp.size()-1;i>=0;i--)
+            {
+                vec.push_back(temp[i]);
+            }
+            v.push_back(vec);
+        }
+        else{
+            v.push_back(temp);
+        }
+        leftToRight=!leftToRight;
+    }
+    return v;
+}
+
+int tree::height(node*root)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+    int lh=height(root->lchild);
+    int rh=height(root->rchild);
+    return max(lh,rh)+1;
+}
+
+//checking if the binary tree is balanced
+
+//a tree is said to be a balanced binary tree if leftHeight-rightHeight<=1
+
+int tree::isBalanced(node*root)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+    int lh=isBalanced(root->lchild);
+    int rh=isBalanced(root->rchild);
+    if(lh==-1 || rh==-1)
+    {
+        return -1;
+    }
+    if(abs(lh-rh)>1)
+    {
+        return -1;
+    }
+    return max(lh,rh)+1;
+}
+
+//diameter of a binary tree
+//diameter of a binary tree is the longest path between any two nodes, the path does not need to pass through the root
+
+int tree::diameter(node*root,int &maxi)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+    int lh=diameter(root->lchild,maxi);
+    int rh=diameter(root->rchild,maxi);
+    maxi=max(maxi,lh+rh);
+    return max(lh,rh)+1;
+}
+
+
 int main()
 {
     tree t;
@@ -352,4 +525,8 @@ int main()
     {
         cout<<leftview[i]<<" ";
     }
+    cout<<"The height of the binary tree is "<<t.height(t.root)<<endl;
+    int maxi=0;
+    t.diameter(t.root,maxi);
+    cout<<"The diameter is "<<maxi<<endl;
 }
